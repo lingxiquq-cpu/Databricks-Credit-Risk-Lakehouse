@@ -40,50 +40,65 @@ The credit risk dataset was uploaded to a Databricks Unity Catalog Volume and sa
 5. Save the cleaned dataset as a Delta Table.
 6. Explore data lineage using Unity Catalog.
 
-## Standardization
+## Business Problem
 
-### Random Forest Classification
+Inspired by Rabobank's credit analytics case, this project focuses on three common challenges in credit risk data management:
 
-Used scikit-learn to train a Random Forest classifier to predict loan approval outcomes based on credit score, annual income, and loan amount.
+1. Inconsistent loan default definitions across different systems.
+2. Data quality issues that may affect credit risk analysis.
+3. Limited data traceability and governance for regulatory audits.
 
-![Model Training](images/model-training-code.png)
 
-## Model Evaluation
+## Data Standardization
 
-### Model Performance
+### Create a Standardized View
 
-Evaluated the model using Accuracy, F1 Score, Precision, and Recall. The model achieved approximately 94% accuracy and an F1 Score of 0.94.
+Created a SQL view to standardize loan default definitions and record the standardization rule version.
 
-![Model Evaluation](images/model-evaluation-results.png)
+![Standardized View](images/standardized-view-creation.png)
 
-### Confusion Matrix
+### Standardization Validation
 
-Visualized the prediction results to identify correctly classified applications and two types of errors: false approvals and false rejections.
+Checked the standardized view and calculated default rates across different loan grades.
 
-![Confusion Matrix](images/confusion_matrix.png)
+![Standardization Validation](images/standardization-validation.png)
 
-### Feature Importance
+## Data Quality Checks
 
-Analyzed feature importance to identify the key factors influencing loan approval predictions.
+### Missing Value Check
 
-![Feature Importance](images/feature_importance.png)
+Checked for missing values in key fields, including income, loan amount, and loan status. No missing values were found in these fields.
 
-### Classification Report
+![Missing Value Check](images/missing-value-check.png)
 
-Generated a classification report to compare Precision, Recall, and F1 Scores for Approved and Rejected applications.
+### Range Check
 
-![Classification Report](images/classification_report.png)
+Identified out-of-range values in age, income, and loan amount.
 
-## Delta Table
+![Range Check](images/range-check.png)
 
-Saved model evaluation metrics, including Accuracy, F1 Score, Precision, and Recall, as a Delta Table in Databricks.
+### Duplicate Check
 
-![Model Metrics Delta Table](images/model-metrics-delta-table.png)
+Identified potential duplicate records based on age, income, loan amount, and loan purpose.
+
+![Duplicate Check](images/potential-duplicate-check.png)
+
+## Data Cleaning and Delta Table
+
+Removed out-of-range records and flagged potential duplicates. Saved the cleaned dataset as a Delta Table in Databricks.
+
+![Data Cleaning](images/data-cleaning-delta-table.png)
+
+## Data Lineage
+
+Used Unity Catalog to track data dependencies between the original credit risk table, standardized view, and Databricks Notebook.
+
+![Data Lineage](images/data-lineage-tracking.png)
 
 
 ## Business Recommendation
 
-Credit score is the core variable in the approval process (77.5% importance) and warrants priority attention; the decision threshold should be adjusted based on the confusion matrix to balance risk and approval rates.
+Standardized loan default definitions and documented rule versions to ensure traceability for regulatory audits. Integrated data quality checks into the pipeline to prevent poor-quality data from affecting downstream reports.
 
 ## Notebook File
 
